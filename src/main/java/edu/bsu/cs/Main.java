@@ -32,9 +32,9 @@ public class Main {
 
             for (Revision revision : revisions) {
                 System.out.println(
-                        revision.getTimestamp()
-                                + " "
-                                + revision.getUsername());
+                       "Username:" + revision.getUsername()
+                                + " | TimeStamp: "
+                                + revision.getTimestamp());
             }
 
         } catch (Exception exception) {
