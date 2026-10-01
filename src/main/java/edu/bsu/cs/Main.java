@@ -1,5 +1,7 @@
 package edu.bsu.cs;
 
+import java.io.InputStream;
+import java.util.List;
 import java.util.Scanner;
 
 public class Main {
@@ -9,7 +11,6 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
 
         System.out.print("Enter a Wikipedia article title: ");
-
         String articleTitle = scanner.nextLine().trim();
 
         if (articleTitle.isEmpty()) {
@@ -17,6 +18,27 @@ public class Main {
             return;
         }
 
-        System.out.println("You requested: " + articleTitle);
+        try {
+            WikipediaClient client = new WikipediaClient();
+
+            InputStream response =
+                    client.getArticleRevisions(articleTitle);
+
+            RevisionParser parser = new RevisionParser();
+            List<Revision> revisions = parser.parse(response);
+
+            System.out.println();
+            System.out.println("Recent changes:");
+
+            for (Revision revision : revisions) {
+                System.out.println(
+                        revision.getTimestamp()
+                                + " "
+                                + revision.getUsername());
+            }
+
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
     }
 }

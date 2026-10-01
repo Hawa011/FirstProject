@@ -22,7 +22,7 @@ public class WikipediaClient {
                 + "&format=json"
                 + "&prop=revisions"
                 + "&titles=" + encodedTitle
-                + "&rvprop=user|timestamp"
+                + "&rvprop=user%7Ctimestamp"
                 + "&rvlimit=15"
                 + "&redirects=1";
 
@@ -34,7 +34,8 @@ public class WikipediaClient {
         HttpClient client = HttpClient.newHttpClient();
 
         HttpResponse<InputStream> response =
-                client.send(request,
+                client.send(
+                        request,
                         HttpResponse.BodyHandlers.ofInputStream());
 
         return response.body();
