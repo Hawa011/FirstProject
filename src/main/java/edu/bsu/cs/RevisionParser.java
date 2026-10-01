@@ -22,4 +22,13 @@ public class RevisionParser {
                         String.valueOf(revision.get("timestamp"))))
                 .collect(Collectors.toList());
     }
+
+    public boolean isPageMissing(InputStream input) {
+        DocumentContext document = JsonPath.parse(input);
+
+        List<Object> missing =
+                document.read("$.query.pages.*.missing");
+
+        return !missing.isEmpty();
+    }
 }

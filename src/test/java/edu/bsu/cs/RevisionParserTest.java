@@ -1,4 +1,3 @@
-
 package edu.bsu.cs;
 
 import org.junit.jupiter.api.Test;
@@ -18,12 +17,28 @@ class RevisionParserTest {
 
         assertNotNull(input);
 
-        List<Revision> revisions = new RevisionParser().parse(input);
+        List<Revision> revisions =
+                new RevisionParser().parse(input);
 
         assertEquals(3, revisions.size());
-        assertEquals("EditorOne", revisions.get(0).getUsername());
+        assertEquals(
+                "EditorOne",
+                revisions.get(0).getUsername());
         assertEquals(
                 "2026-09-28T10:30:00Z",
                 revisions.get(0).getTimestamp());
+    }
+
+    @Test
+    void detectsMissingPage() {
+        InputStream input = getClass().getResourceAsStream(
+                "/wikipedia-missing-page.json");
+
+        assertNotNull(input);
+
+        boolean missing =
+                new RevisionParser().isPageMissing(input);
+
+        assertEquals(true, missing);
     }
 }
