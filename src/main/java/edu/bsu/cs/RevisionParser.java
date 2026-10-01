@@ -31,4 +31,13 @@ public class RevisionParser {
 
         return !missing.isEmpty();
     }
+
+    public boolean isRedirect(InputStream input) {
+        DocumentContext document = JsonPath.parse(input);
+
+        List<Object> redirects =
+                document.read("$.query.redirects");
+
+        return !redirects.isEmpty();
+    }
 }

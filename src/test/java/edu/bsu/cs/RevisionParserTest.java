@@ -41,4 +41,17 @@ class RevisionParserTest {
 
         assertEquals(true, missing);
     }
+
+    @Test
+    void detectsRedirect() {
+        InputStream input = getClass().getResourceAsStream(
+                "/wikipedia-redirect.json");
+
+        assertNotNull(input);
+
+        boolean redirect =
+                new RevisionParser().isRedirect(input);
+
+        assertEquals(true, redirect);
+    }
 }

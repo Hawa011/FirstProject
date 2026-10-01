@@ -1,0 +1,23 @@
+{
+  "batchcomplete": "",
+  "query": {
+    "redirects": [
+      {
+        "from": "USA",
+        "to": "United States"
+      }
+    ],
+    "pages": {
+      "3434750": {
+        "pageid": 3434750,
+        "title": "United States",
+        "revisions": [
+          {
+            "user": "ExampleEditor",
+            "timestamp": "2026-09-30T12:00:00Z"
+          }
+        ]
+      }
+    }
+  }
+}
