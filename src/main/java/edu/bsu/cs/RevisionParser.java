@@ -2,42 +2,58 @@ package edu.bsu.cs;
 
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
+import com.jayway.jsonpath.PathNotFoundException;
 
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 public class RevisionParser {
 
-    public List<Revision> parse(InputStream input) {
+    public WikipediaResult parseResult(InputStream input) {
         DocumentContext document = JsonPath.parse(input);
 
-        List<Map<String, Object>> revisionData =
-                document.read("$.query.pages.*.revisions[*]");
+        boolean missing = pathExists(
+                document,
+                "$.query.pages.*.missing");
 
-        return revisionData.stream()
-                .map(revision -> new Revision(
+        boolean redirect = pathExists(
+                document,
+                "$.query.redirects");
+
+        List<Revision> revisions = new ArrayList<>();
+
+        if (!missing) {
+            List<Map<String, Object>> revisionData =
+                    document.read("$.query.pages.*.revisions[*]");
+
+            for (Map<String, Object> revision : revisionData) {
+                revisions.add(new Revision(
                         String.valueOf(revision.get("user")),
-                        String.valueOf(revision.get("timestamp"))))
-                .collect(Collectors.toList());
+                        String.valueOf(revision.get("timestamp"))));
+            }
+        }
+
+        return new WikipediaResult(
+                revisions,
+                missing,
+                redirect);
     }
 
-    public boolean isPageMissing(InputStream input) {
-        DocumentContext document = JsonPath.parse(input);
-
-        List<Object> missing =
-                document.read("$.query.pages.*.missing");
-
-        return !missing.isEmpty();
+    public List<Revision> parse(InputStream input) {
+        return parseResult(input).getRevisions();
     }
 
-    public boolean isRedirect(InputStream input) {
-        DocumentContext document = JsonPath.parse(input);
+    private boolean pathExists(
+            DocumentContext document,
+            String path) {
 
-        List<Object> redirects =
-                document.read("$.query.redirects");
-
-        return !redirects.isEmpty();
+        try {
+            List<Object> values = document.read(path);
+            return !values.isEmpty();
+        } catch (PathNotFoundException exception) {
+            return false;
+        }
     }
 }

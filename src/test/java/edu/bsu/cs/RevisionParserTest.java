@@ -5,8 +5,7 @@ import org.junit.jupiter.api.Test;
 import java.io.InputStream;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 class RevisionParserTest {
 
@@ -21,11 +20,9 @@ class RevisionParserTest {
                 new RevisionParser().parse(input);
 
         assertEquals(3, revisions.size());
-        assertEquals(
-                "EditorOne",
+        assertEquals("EditorOne",
                 revisions.get(0).getUsername());
-        assertEquals(
-                "2026-09-28T10:30:00Z",
+        assertEquals("2026-09-28T10:30:00Z",
                 revisions.get(0).getTimestamp());
     }
 
@@ -36,10 +33,10 @@ class RevisionParserTest {
 
         assertNotNull(input);
 
-        boolean missing =
-                new RevisionParser().isPageMissing(input);
+        WikipediaResult result =
+                new RevisionParser().parseResult(input);
 
-        assertEquals(true, missing);
+        assertTrue(result.isMissing());
     }
 
     @Test
@@ -49,9 +46,9 @@ class RevisionParserTest {
 
         assertNotNull(input);
 
-        boolean redirect =
-                new RevisionParser().isRedirect(input);
+        WikipediaResult result =
+                new RevisionParser().parseResult(input);
 
-        assertEquals(true, redirect);
+        assertTrue(result.isRedirect());
     }
 }
